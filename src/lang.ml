@@ -45,6 +45,12 @@ let rec subst (x, v, e) : expr =
   | Mult(e1,e2) -> Mult(subst(x,v,e1), subst(x,v,e2))
   | Equal(e1,e2) -> Equal(subst(x,v,e1), subst(x,v,e2))
   | If(e0,e1,e2) -> If(subst(x,v,e0), subst(x,v,e1), subst(x,v,e2))
+  | Pair(e1, e2) -> Pair(subst(x,v,e1), subst(x,v,e2))
+  | First(e') -> First(subst(x,v,e'))
+  | Second(e') -> Second(subst(x,v,e'))
+  | Fun(y, e') -> Fun(y,  if x = y then e' else subst(x,v,e'))
+  | Fix(f,y, e') -> Fix (f, y, if x = y || x = f then e' else subst(x,v,e'))
+  | App(e1, e2) -> App(subst(x,v,e1), subst(x,v,e2))
 
 type step_result = Step of expr | NotReducible
 (* 
