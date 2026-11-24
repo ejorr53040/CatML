@@ -12,10 +12,12 @@ type expr =
      | If of expr * expr * expr
      (* Variables and let expressions *)
      | Var of var | Let of var * expr * expr
-
-     (* TODO: Add pairs; functions; and recursive functions *)
-
-
+     | Pair of expr * expr
+     | First of expr
+     | Second of expr
+     | Fun of var * expr
+     | Fix of var * var * expr
+     | App of expr * expr 
 (*
   is_val : expr -> bool
   in : AST [[e]]
