@@ -23,10 +23,13 @@ type expr =
   in : AST [[e]]
   out : true iff e is a value
 *)
-let is_val e = match e with 
-     Int _ -> true
-   | Bool _ -> true
-   | _ -> false
+let rec is_val e = match e with 
+  | Int _ -> true
+  | Bool _ -> true
+  | Pair(e1,e2) -> (is_val e1) && (is_val e2)
+  | Fun(_,_) -> true
+  | Fix(_,_,_) -> true
+  | _ -> false
 
 (*************************)
 (* Operational Semantics *)
@@ -131,6 +134,34 @@ let rec step (e : expr) : step_result =
       | Step e1' -> Step (Let(x,e1',e2))
       | NotReducible -> if is_val e1 then Step(subst(x,e1,e2)) else NotReducible
       end
+    | Pair(e1, e2) ->
+      begin match step e1 with 
+      |Step e1' -> Step (Pair(e1',e2))
+      | NotReducible -> 
+        begin match step e2 with 
+        | Step e2' -> Step( Pair(e1, e2'))
+        |NotReducible -> NotReducible
+        end
+      end
+    | First (e) ->
+      begin match step e with
+      | Step (e') -> Step(First(e'))
+      |NotReducible -> 
+        begin match e with 
+        | Pair(v1,v2) when is_val e -> Step v1
+        | _ -> NotReducible
+        end
+      end
+    | Second(e) -> 
+      begin match step e with
+      | Step(e') -> Step(Second(e'))
+      |NotReducible ->
+      begin match e with 
+      | Pair(v1, v2) when is_val e -> Step v2
+      | _ -> NotReducible
+      end
+      end
+    
 
 
 (*

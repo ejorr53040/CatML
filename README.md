@@ -82,15 +82,14 @@ TODO
 
 1. If you worked as a group, list all the group members.
 
-TODO
+Ej Orr, Faris Rawlings
 
 2. Did you use generative AI to assist you in implementing this project? If so, briefly explain how you used it and for which components.
 
-TODO
+I used generative AI (Hermes Running Claude Models) to ensure the environment was set up, some steps of the dune install were giving me issues on my device. I also utilized it to learn how to automatically lint and format ocaml code. Created a .git/hooks to lint and format on commit. 
 
 3. Did you make any design decisions that we should know about?
-
-TODO
+I decided to treat the fix operator as a value. For 
 
 4. Did you implement any of the extra credit features? Briefly summarize your work.
 
@@ -98,4 +97,4 @@ TODO
 
 5. Any feedback on the structure of this assignment?
 
-TODO
+
