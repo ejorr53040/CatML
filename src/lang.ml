@@ -241,6 +241,18 @@ let rec lookup (g, x) : arith_type option =
 let extend (g, x, tp) : context = (x, tp) :: g
 
 (*Some type inferrence ec stuff *)
+let fresh n : arith_type * int = (TVAR n, n + 1)
+
+let rec apply_subst s t =
+  match t with
+  | INT | BOOL -> t
+  | TVAR n ->
+      begin match List.assoc_opt n s with
+      | None -> TVAR n
+      | Some t -> apply_subst s t
+      end
+  | PAIR (t1, t2) -> PAIR (apply_subst s t1, apply_subst s t2)
+  | ARROW (t1, t2) -> ARROW (apply_subst s t1, apply_subst s t2)
 
 let rec type_of_expr (g, e) : arith_type option =
   match e with
