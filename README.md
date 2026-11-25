@@ -1,3 +1,6 @@
+# HELLO FARIS IVE DECIDED WE ARE DOING TYPE INFERRENCE, shld be all in the repo lmk if its buggin
+
+
 # Assignment 8, CS3250
 
 TODO: Update this README and fill out the reflection questions.
