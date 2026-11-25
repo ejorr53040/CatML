@@ -274,40 +274,99 @@ let rec unify (s, t1, t2) : (int * arith_type) list option =
       match unify (s, a1, a2) with None -> None | Some s' -> unify (s', b1, b2))
   | _ -> None
 
-let rec type_of_expr (g, e) : arith_type option =
+let rec infer (g, s, n, e) : (arith_type * (int * arith_type) list * int) option
+    =
   match e with
-  | Var x -> lookup (g, x)
-  | Let (x, e1, e2) ->
-      begin match type_of_expr (g, e1) with
-      | None -> None
-      | Some tp -> type_of_expr (extend (g, x, tp), e2)
+  | Var x ->
+      begin match lookup (g, x) with Some t -> Some (t, s, n) | None -> None
       end
-  | Bool _ -> Some BOOL
+  | Let (x, e1, e2) ->
+      begin match infer (g, s, n, e1) with
+      | None -> None
+      | Some (t1, s1, n1) -> infer (extend (g, x, t1), s1, n1, e2)
+      end
+  | Bool _ -> Some (BOOL, s, n)
   | And (e1, e2) | Or (e1, e2) ->
-      begin match (type_of_expr (g, e1), type_of_expr (g, e2)) with
-      | Some BOOL, Some BOOL -> Some BOOL
-      | _, _ -> None
+      begin match infer (g, s, n, e1) with
+      | None -> None
+      | Some (t1, s1, n1) ->
+          begin match unify (s1, t1, BOOL) with
+          | None -> None
+          | Some s2 ->
+              begin match infer (g, s2, n1, e2) with
+              | None -> None
+              | Some (t2, s3, n2) ->
+                  begin match unify (s3, t2, BOOL) with
+                  | None -> None
+                  | Some s4 -> Some (BOOL, s4, n2)
+                  end
+              end
+          end
       end
   | Not e' ->
-      begin match type_of_expr (g, e') with Some BOOL -> Some BOOL | _ -> None
+      begin match infer (g, s, n, e') with
+      | None -> None
+      | Some (t1, s1, n1) ->
+          begin match unify (s1, t1, BOOL) with
+          | None -> None
+          | Some s2 -> Some (BOOL, s2, n1)
+          end
       end
-  | Int _ -> Some INT
+  | Int _ -> Some (INT, s, n)
   | Plus (e1, e2) | Mult (e1, e2) ->
-      begin match (type_of_expr (g, e1), type_of_expr (g, e2)) with
-      | Some INT, Some INT -> Some INT
-      | _, _ -> None
+      begin match infer (g, s, n, e1) with
+      | None -> None
+      | Some (t1, s1, n1) ->
+          begin match unify (s1, t1, INT) with
+          | None -> None
+          | Some s2 ->
+              begin match infer (g, s2, n1, e2) with
+              | None -> None
+              | Some (t2, s3, n2) ->
+                  begin match unify (s3, t2, INT) with
+                  | None -> None
+                  | Some s4 -> Some (INT, s4, n2)
+                  end
+              end
+          end
       end
   | Equal (e1, e2) ->
-      begin match (type_of_expr (g, e1), type_of_expr (g, e2)) with
-      | Some INT, Some INT -> Some BOOL
-      | _, _ -> None
+      begin match infer (g, s, n, e1) with
+      | None -> None
+      | Some (t1, s1, n1) ->
+          begin match unify (s1, t1, INT) with
+          | None -> None
+          | Some s2 ->
+              begin match infer (g, s2, n1, e2) with
+              | None -> None
+              | Some (t2, s3, n2) ->
+                  begin match unify (s3, t2, INT) with
+                  | None -> None
+                  | Some s4 -> Some (BOOL, s4, n2)
+                  end
+              end
+          end
       end
   | If (e0, e1, e2) ->
-      begin match
-        (type_of_expr (g, e0), type_of_expr (g, e1), type_of_expr (g, e2))
-      with
-      | Some BOOL, Some t1, Some t2 -> if t1 = t2 then Some t1 else None
-      | _, _, _ -> None
+      begin match infer (g, s, n, e0) with
+      | None -> None
+      | Some (t1, s1, n1) ->
+          begin match unify (s1, t1, BOOL) with
+          | None -> None
+          | Some s2 ->
+              begin match infer (g, s2, n1, e1) with
+              | None -> None
+              | Some (t2, s3, n2) ->
+                  begin match infer (g, s3, n2, e2) with
+                  | None -> None
+                  | Some (t3, s4, n3) ->
+                      begin match unify (s4, t2, t3) with
+                      | None -> None
+                      | Some s5 -> Some (t2, s5, n3)
+                      end
+                  end
+              end
+          end
       end
 
 (********************************************)
