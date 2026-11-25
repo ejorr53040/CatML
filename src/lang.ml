@@ -368,6 +368,35 @@ let rec infer (g, s, n, e) : (arith_type * (int * arith_type) list * int) option
               end
           end
       end
+  | Fun (v, body) ->
+      let tv, n1 = fresh n in
+      begin match infer (extend (g, v, tv), s, n1, body) with
+      | None -> None
+      | Some (tb, s1, n2) -> Some (ARROW (tv, tb), s1, n2)
+      end
+  | App (e1, e2) ->
+      begin match infer (g, s, n, e1) with
+      | None -> None
+      | Some (t, s1, n1) ->
+          begin match infer (g, s1, n1, e2) with
+          | None -> None
+          | Some (t1, s2, n3) ->
+              let tr, n4 = fresh n3 in
+              begin match unify (s2, t, ARROW (t1, tr)) with
+              | None -> None
+              | Some s3 -> Some (tr, s3, n4)
+              end
+          end
+      end
+  | Pair (e1, e2) ->
+      begin match infer (g, s, n, e1) with
+      | None -> None
+      | Some (t, s1, n1) ->
+          begin match infer (g, s1, n1, e2) with
+          | None -> None
+          | Some (t1, s2, n2) -> Some (PAIR (t, t1), s2, n2)
+          end
+      end
 
 (********************************************)
 (* Utility functions for working with ARITH *)
