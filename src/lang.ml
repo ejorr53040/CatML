@@ -175,6 +175,20 @@ let rec step (e : expr) : step_result =
           | _ -> NotReducible
           end
       end
+  | Fun _ -> NotReducible
+  | App (e1, e2) ->
+      begin match step e1 with
+      | Step e1' -> Step (App (e1', e2))
+      | NotReducible ->
+          begin match step e2 with
+          | Step e2' -> Step (App (e1, e2'))
+          | NotReducible ->
+              begin match e1 with
+              | Fun (x, body) when is_val e2 -> Step (subst (x, e2, body))
+              | _ -> NotReducible
+              end
+          end
+      end
 
 (*
    multistep : expr -> expr
