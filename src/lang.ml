@@ -397,6 +397,28 @@ let rec infer (g, s, n, e) : (arith_type * (int * arith_type) list * int) option
           | Some (t1, s2, n2) -> Some (PAIR (t, t1), s2, n2)
           end
       end
+  | First e' ->
+      begin match infer (g, s, n, e') with
+      | None -> None
+      | Some (t, s1, n1) ->
+          let a, n2 = fresh n1 in
+          let b, n3 = fresh n2 in
+          begin match unify (s1, t, PAIR (a, b)) with
+          | None -> None
+          | Some s2 -> Some (a, s2, n3)
+          end
+      end
+  | Second e' ->
+      begin match infer (g, s, n, e') with
+      | None -> None
+      | Some (t, s1, n1) ->
+          let a, n2 = fresh n1 in
+          let b, n3 = fresh n2 in
+          begin match unify (s1, t, PAIR (a, b)) with
+          | None -> None
+          | Some s2 -> Some (b, s2, n3)
+          end
+      end
 
 (********************************************)
 (* Utility functions for working with ARITH *)
