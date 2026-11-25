@@ -1,5 +1,7 @@
-(library (name CatML))
+(library
+ (name CatML))
 
-(menhir (modules parser))
+(menhir
+ (modules parser))
 
 (ocamllex lexer)
