@@ -254,6 +254,26 @@ let rec apply_subst s t =
   | PAIR (t1, t2) -> PAIR (apply_subst s t1, apply_subst s t2)
   | ARROW (t1, t2) -> ARROW (apply_subst s t1, apply_subst s t2)
 
+(*unify helper*)
+let rec occurs n t =
+  match t with
+  | TVAR m -> m = n
+  | INT -> false
+  | BOOL -> false
+  | ARROW (l, r) -> occurs n r || occurs n l
+  | PAIR (l, r) -> occurs n l || occurs n r
+
+let rec unify (s, t1, t2) : (int * arith_type) list option =
+  match (apply_subst s t1, apply_subst s t2) with
+  | INT, INT | BOOL, BOOL -> Some s
+  | TVAR a, TVAR b when a = b -> Some s
+  | TVAR n, t | t, TVAR n -> if occurs n t then None else Some ((n, t) :: s)
+  | ARROW (a1, b1), ARROW (a2, b2) -> (
+      match unify (s, a1, a2) with None -> None | Some s' -> unify (s', b1, b2))
+  | PAIR (a1, b1), PAIR (a2, b2) -> (
+      match unify (s, a1, a2) with None -> None | Some s' -> unify (s', b1, b2))
+  | _ -> None
+
 let rec type_of_expr (g, e) : arith_type option =
   match e with
   | Var x -> lookup (g, x)
