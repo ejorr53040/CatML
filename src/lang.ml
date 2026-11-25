@@ -175,7 +175,7 @@ let rec step (e : expr) : step_result =
           | _ -> NotReducible
           end
       end
-  | Fun _ -> NotReducible
+  | Fun _ | Fix _ -> NotReducible
   | App (e1, e2) ->
       begin match step e1 with
       | Step e1' -> Step (App (e1', e2))
@@ -185,6 +185,8 @@ let rec step (e : expr) : step_result =
           | NotReducible ->
               begin match e1 with
               | Fun (x, body) when is_val e2 -> Step (subst (x, e2, body))
+              | Fix (f, x, body) when is_val e2 ->
+                  Step (subst (f, e1, subst (x, e2, body)))
               | _ -> NotReducible
               end
           end
