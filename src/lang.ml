@@ -240,6 +240,8 @@ let rec lookup (g, x) : arith_type option =
  *)
 let extend (g, x, tp) : context = (x, tp) :: g
 
+(*Some type inferrence ec stuff *)
+
 let rec type_of_expr (g, e) : arith_type option =
   match e with
   | Var x -> lookup (g, x)
