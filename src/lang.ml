@@ -204,8 +204,12 @@ let rec multistep e =
 (* Type checking *)
 (*****************)
 
-type arith_type = INT | BOOL
-(* TODO: add pairs and function types *)
+type arith_type =
+  | INT
+  | BOOL
+  | ARROW of arith_type * arith_type
+  | PAIR of arith_type * arith_type
+  | TVAR of int
 
 (* Define a type to represent finite maps/typing contexts *)
 type context = (var * arith_type) list
