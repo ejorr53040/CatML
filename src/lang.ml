@@ -419,6 +419,19 @@ let rec infer (g, s, n, e) : (arith_type * (int * arith_type) list * int) option
           | Some s2 -> Some (b, s2, n3)
           end
       end
+  | Fix (f, x, body) ->
+      let a, n1 = fresh n in
+      let b, n2 = fresh n1 in
+      begin match
+        infer (extend (extend (g, f, ARROW (a, b)), x, a), s, n2, body)
+      with
+      | None -> None
+      | Some (tb, s1, n3) ->
+          begin match unify (s1, tb, b) with
+          | None -> None
+          | Some s2 -> Some (ARROW (a, b), s2, n3)
+          end
+      end
 
 (********************************************)
 (* Utility functions for working with ARITH *)
