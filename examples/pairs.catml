@@ -1,0 +1,5 @@
+Let c = 20 In
+Let v = 4 In
+Let b = (c, v) In
+Let n = First b In
+n + Second b
