@@ -92,7 +92,7 @@ Ej Orr, Faris Rawlings
 I used generative AI (Hermes Running Claude Models) to ensure the environment was set up, some steps of the dune install were giving me issues on my device. I also utilized it to learn how to automatically lint and format ocaml code. Created a .git/hooks to lint and format on commit. 
 
 3. Did you make any design decisions that we should know about?
-I decided to treat the fix operator as a value. 
+I decided to treat the fix operator as well as functions as values in the code, I decided to overwrite the existing type_of_expr to utilize the extra credit we are attempting with type inferrence. Also along with type inferrence, TYPE counter variables are added in intermediate that get resolved out by the type checker. Type checking is done through the "public" (maybe oop languags are on to something) facing api type_of_program. 
 
 4. Did you implement any of the extra credit features? Briefly summarize your work.
 Yes, I impleneted type inferrence as my extra language feature, for this I had to implement the functions:
@@ -100,10 +100,10 @@ fresh, to create a new typing context,
 apply_subst, to apply a substitution for type inferrence
 occurs as a helper for unify which unifies a type variable to its intended type
 I then turned type_of_expr to be infer, since now type inferrence is in the language and wow was it a lot of match statements 
-each of the infer then unify steps on the binary and up operators. I regret implementing this but I no longer take those little gray type hints next to my code for granted. 
+each of the infer then unify steps on the binary and up operators. I regret implementing this and I dislike TypeScript and and python significantly more now. 
 
 
 5. Any feedback on the structure of this assignment?
-I feel like implementing this language helped me understand other programming languages better. Having to think in abstract syntax trees while writing and debugging the type checker/ inference broke up some of the ideas I had about the process of learning a programming language. I also think that this project demystified the concept of a programming language and how it goes from replacement rules to actually running code. I think also the distribution of the amount of effort required between the three parts of the assignment was a bit unbalanced, but that could just have been our implemnetation decisions that led to that.
+I feel like implementing this language helped me understand other programming languages better. Having to think in abstract syntax trees while writing and debugging the type checker/ inference broke up some of the ideas I had about the process of learning a programming language. I also think that this project also cemented a lot of the concepts from class as actual physical code and seeing the exact rules that we have been working on the whiteboard as code was fufilling I think also the distribution of the amount of effort required between the three parts of the assignment was a bit unbalanced, but that could just have been our implemnetation decisions that led to that. Lasty, sum types, matching and optionals are quite useful language features
 
 
