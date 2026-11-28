@@ -489,6 +489,11 @@ let normalize t =
   let r, _, _ = rename ((fun _ -> None), 0, t) in
   r
 
+let type_of_program e =
+  match infer (empty_context, [], 0, e) with
+  | Some (t, s, _) -> Some (normalize (apply_subst s t))
+  | None -> None
+
 let rec string_of_type t =
   begin match t with
   | INT -> "Int"
