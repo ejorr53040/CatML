@@ -1,1 +1,4 @@
 Let x = 5 in If(x, False, True)
+
+App (Fun ("x", Plus (Var "x", Int 1)), Bool true)
+

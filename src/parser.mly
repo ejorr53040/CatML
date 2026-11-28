@@ -34,6 +34,7 @@ prog:
 
 expr:
   | i    = INT { Int i }
+  | b    = BOOL { Bool b }
   | x    = ID  { Var x }
   | TRUE       { Bool true }
   | FALSE      { Bool false }
@@ -49,5 +50,7 @@ expr:
   | Pair; e1 = expr; e2 = expr { Pair (e1, e2) }
   | First; e = expr { First e }
   | Second; e = expr { Second e }
-  |
+  | Fun; x = ID; e = expr { Fun (x, e) }
+  | Fix; x = ID; e = expr { Fix (x, e) }
+  | App; e1 = expr; e2 = expr { App (e1, e2) }
   ;

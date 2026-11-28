@@ -23,6 +23,15 @@ rule read =
   | "If" { IF }
   | "Then" { THEN }
   | "Else" { ELSE }
+  | "And" { And }
+  | "Or" { Or }
+  | "Not" { Not }
+  | "Pair" { Pair }
+  | "First" { First }
+  | "Second" { Second }
+  | "Fun" { Fun }
+  | "Fix" { Fix }
+  | "App" { App }
   | id { ID (Lexing.lexeme lexbuf) }
   | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | eof { EOF }
