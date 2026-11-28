@@ -1,0 +1,5 @@
+Let fib = Fix f. x ->
+    If (x = 0 Or x = 1) Then 1
+    Else f (x + -1) + f (x + -2)
+
+In fib 5

@@ -446,7 +446,7 @@ let rec string_of_expr e =
   match e with
   | Var x -> x
   | Let (x, e1, e2) ->
-      "Let " ^ x ^ " = " ^ string_of_expr e1 ^ " In " ^ string_of_expr e2
+      "(Let " ^ x ^ " = " ^ string_of_expr e1 ^ " In " ^ string_of_expr e2 ^ ")"
   | Bool true -> "True"
   | Bool false -> "False"
   | Int n -> string_of_int n
@@ -457,8 +457,8 @@ let rec string_of_expr e =
   | Mult (e1, e2) -> "(" ^ string_of_expr e1 ^ " * " ^ string_of_expr e2 ^ ")"
   | Equal (e1, e2) -> "(" ^ string_of_expr e1 ^ " = " ^ string_of_expr e2 ^ ")"
   | If (e1, e2, e3) ->
-      "If " ^ string_of_expr e1 ^ " Then " ^ string_of_expr e2 ^ " Else "
-      ^ string_of_expr e3
+      "(If " ^ string_of_expr e1 ^ " Then " ^ string_of_expr e2 ^ " Else "
+      ^ string_of_expr e3 ^ ")"
   | Pair (e1, e2) -> "(" ^ string_of_expr e1 ^ ", " ^ string_of_expr e2 ^ ")"
   | First e1 -> "(First " ^ string_of_expr e1 ^ ")"
   | Second e1 -> "(Second " ^ string_of_expr e1 ^ ")"
