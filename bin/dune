@@ -1,4 +1,4 @@
 (executable
-  (public_name catml)
-  (name catml)
-  (libraries CatML))
+ (public_name catml)
+ (name catml)
+ (libraries CatML))
