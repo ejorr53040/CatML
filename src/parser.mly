@@ -43,4 +43,11 @@ expr:
   | LET; x = ID; EQUALS; e1 = expr; IN; e2 = expr   { Let (x, e1, e2) }
   | IF; e1 = expr; THEN; e2 = expr; ELSE; e3 = expr { If (e1, e2, e3) }
   | LPAREN; e=expr; RPAREN {e}
+  | And; e1 = expr; e2 = expr { And (e1, e2) }
+  | Or; e1 = expr; e2 = expr { Or (e1, e2) }
+  | Not; e = expr { Not e }
+  | Pair; e1 = expr; e2 = expr { Pair (e1, e2) }
+  | First; e = expr { First e }
+  | Second; e = expr { Second e }
+  |
   ;

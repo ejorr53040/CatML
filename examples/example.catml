@@ -1,3 +1,13 @@
 Let x = 5 In
 Let y = 100 In
 x + y
+
+Let m = 10 In
+Let n = 10 In
+m * n
+
+Let c = 20 in
+Let v = 4 in 
+Let b = Pair(c,v) in 
+Let n = First(b) in 
+n + Second(b)
