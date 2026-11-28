@@ -78,7 +78,10 @@ In the `examples` directory I have included two sample CatML programs. You shoul
 
 ## How to interact with a CatML program
 
-TODO
+To run the file, 
+call dune install followed by 
+catml examples/<yourprojectfile> 
+
 
 
 # Reflection Questions
