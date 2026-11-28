@@ -89,7 +89,7 @@ Ej Orr, Faris Rawlings
 
 2. Did you use generative AI to assist you in implementing this project? If so, briefly explain how you used it and for which components.
 
-I used generative AI (Hermes Running Claude Models) to ensure the environment was set up, some steps of the dune install were giving me issues on my device. I also utilized it to learn how to automatically lint and format ocaml code. Created a .git/hooks to lint and format on commit. 
+I used generative AI to ensure the environment was set up, some steps of the dune install were giving me issues on my device. I also utilized it to learn how to automatically lint and format ocaml code. Created a .git/hooks to lint and format on commit. In part 3 of the project I utilized a coding agent to fetch documentation for dune build system to call the program with command line arguments and handle file io and error rendering, then used it for error diagnosis on file structure issues with dune calling catml as a standalone bin. (bin/dune, bin/catml.ml) 
 
 3. Did you make any design decisions that we should know about?
 I decided to treat the fix operator as well as functions as values in the code, I decided to overwrite the existing type_of_expr to utilize the extra credit we are attempting with type inferrence. Also along with type inferrence, TYPE counter variables are added in intermediate that get resolved out by the type checker. Type checking is done through the "public" (maybe oop languags are on to something) facing api type_of_program. 
