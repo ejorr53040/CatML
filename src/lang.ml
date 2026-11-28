@@ -466,6 +466,52 @@ let rec string_of_expr e =
   | Fix (f, x, e1) -> "(Fix " ^ f ^ "." ^ x ^ " -> " ^ string_of_expr e1 ^ ")"
   | App (e1, e2) -> "(" ^ string_of_expr e1 ^ " " ^ string_of_expr e2 ^ ")"
 
+let rec rename (m, next, t) : arith_type * (int -> int option) * int =
+  match t with
+  | INT | BOOL -> (t, m, next)
+  | TVAR n ->
+      begin match m n with
+      | Some i -> (TVAR i, m, next)
+      | None ->
+          let m' = fun k -> if k = n then Some next else m k in
+          (TVAR next, m', next + 1)
+      end
+  | ARROW (t1, t2) ->
+      let r1, m1, next1 = rename (m, next, t1) in
+      let r2, m2, next2 = rename (m1, next1, t2) in
+      (ARROW (r1, r2), m2, next2)
+  | PAIR (t1, t2) ->
+      let r1, m1, next1 = rename (m, next, t1) in
+      let r2, m2, next2 = rename (m1, next1, t2) in
+      (PAIR (r1, r2), m2, next2)
+
+let normalize t =
+  let r, _, _ = rename ((fun _ -> None), 0, t) in
+  r
+
+let rec string_of_type t =
+  begin match t with
+  | INT -> "Int"
+  | BOOL -> "Bool"
+  | PAIR (t1, t2) ->
+      begin match t1 with
+      | ARROW _ | PAIR _ -> "(" ^ string_of_type t1 ^ ")"
+      | _ -> string_of_type t1
+      end
+      ^ " * "
+      ^ begin match t2 with
+      | ARROW _ | PAIR _ -> "(" ^ string_of_type t2 ^ ")"
+      | _ -> string_of_type t2
+      end
+  | ARROW (t1, t2) ->
+      begin match t1 with
+      | ARROW _ -> "(" ^ string_of_type t1 ^ ")"
+      | _ -> string_of_type t1
+      end
+      ^ " -> " ^ string_of_type t2
+  | TVAR n -> "'" ^ String.make 1 (Char.chr (97 + n))
+  end
+
 (*
   pretty_trace : expr -> bool -> unit
   in : AST [[e]], stepper flag 
